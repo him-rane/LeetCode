@@ -53,10 +53,14 @@ class Solution {
                 // self nodes are not considered 
                 if(adj.get(i).get(j) == 1 && i != j) {
                     adjLs.get(i).add(j); 
-                    adjLs.get(j).add(i); 
+                    // adjLs.get(j).add(i); 
                 }
             }
         }
+        
+        //  for(int i = 0;i<V;i++) {
+        //     System.out.println(adjLs.get(i)); 
+        // }
         
         boolean[]vis=new boolean[V];
         int count=0;
