@@ -65,7 +65,7 @@ class Solution {
 		
 		//cal the sortes dist
 		int[]dist=new int[N];
-		Arrays.fill(dist,(int)(1e9));
+		Arrays.fill(dist,Integer.MAX_VALUE);
 		dist[0]=0;
 		while(st.size()>0){
 		    int v=st.pop();
@@ -73,15 +73,12 @@ class Solution {
 		        int u=itr.ed;
 		        int w=itr.wt;
 		        
-		        if(dist[u]>dist[v]+w){
-		            dist[u]=dist[v]+w;
-		        }
-		        
+		        if(dist[v]!=Integer.MAX_VALUE)dist[u]=Math.min(dist[u],w+dist[v]);
 		    }
 		}
 		
 		for (int i = 0; i < N; i++) {
-          if (dist[i] == (int)(1e9)) dist[i] = -1;
+          if (dist[i] == Integer.MAX_VALUE) dist[i] = -1;
         }
        
 		
