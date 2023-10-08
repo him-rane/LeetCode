@@ -33,35 +33,35 @@ public class Main{
 
 // User function Template for Java
 class DisjointSet{
-    List<Integer> size = new ArrayList<>();
-    List<Integer> parent = new ArrayList<>();
+    int[]size;
+    int[]parent;
     
     public DisjointSet(int n){
-      for (int i = 0; i <= n; i++) {
-            parent.add(i);
-            size.add(1);
+        size=new int[n+1];
+        parent=new int[n+1];
+        for(int i=0;i<=n;i++){
+            size[i]=1;
+            parent[i]=i;
         }
     }
     
     public int find(int node){
-         if (node == parent.get(node)) {
-            return node;
-        }
-        int ulp = find(parent.get(node));
-        parent.set(node, ulp);
-        return parent.get(node);
+        if(node==parent[node])return node;
+        return parent[node]=find(parent[node]);
     }
     
     public void union(int u,int v){
-        int ulp_u = find(u);
-        int ulp_v = find(v);
-        if (ulp_u == ulp_v) return;
-        if (size.get(ulp_u) < size.get(ulp_v)) {
-            parent.set(ulp_u, ulp_v);
-            size.set(ulp_v, size.get(ulp_v) + size.get(ulp_u));
-        } else {
-            parent.set(ulp_v, ulp_u);
-            size.set(ulp_u, size.get(ulp_u) + size.get(ulp_v));
+        int parU=find(u);
+        int parV=find(v);
+        
+        if(parU==parV)return;
+        
+        if(size[parU]<size[parV]){
+            parent[parU]=parV;
+            size[parV]+=size[parU];
+        }else{
+            parent[parV]=parU;
+            size[parU]+=size[parV];
         }
         
     }
@@ -81,9 +81,7 @@ class Solution{
         });
 
         // Print the sorted array
-        // for (int[] row : edges) {
-        //     System.out.println(Arrays.toString(row));
-        // }
+       
 	    
 	    for(int i=0;i<E;i++){
 	       int u=edges[i][0];
