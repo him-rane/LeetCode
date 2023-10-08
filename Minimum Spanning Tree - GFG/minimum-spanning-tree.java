@@ -32,75 +32,73 @@ public class Main{
 
 
 // User function Template for Java
-
-class Solution{
+class DisjointSet{
+    List<Integer> size = new ArrayList<>();
+    List<Integer> parent = new ArrayList<>();
     
-    static class Pair{
-        int node;
-        int dist;
-     
-        Pair(int node,int dist){
-            this.node=node;
-            this.dist=dist;
+    public DisjointSet(int n){
+      for (int i = 0; i <= n; i++) {
+            parent.add(i);
+            size.add(1);
         }
     }
     
+    public int find(int node){
+         if (node == parent.get(node)) {
+            return node;
+        }
+        int ulp = find(parent.get(node));
+        parent.set(node, ulp);
+        return parent.get(node);
+    }
+    
+    public void union(int u,int v){
+        int ulp_u = find(u);
+        int ulp_v = find(v);
+        if (ulp_u == ulp_v) return;
+        if (size.get(ulp_u) < size.get(ulp_v)) {
+            parent.set(ulp_u, ulp_v);
+            size.set(ulp_v, size.get(ulp_v) + size.get(ulp_u));
+        } else {
+            parent.set(ulp_v, ulp_u);
+            size.set(ulp_u, size.get(ulp_u) + size.get(ulp_v));
+        }
+        
+    }
+}
+
+class Solution{
 	static int spanningTree(int V, int E, int edges[][]){
 	    // Code Here. 
-	    
-	    ArrayList<ArrayList<Pair>>adj=new ArrayList<>();
-	  
-	    for(int i=0;i<V;i++){
-	        adj.add(new ArrayList<>());
-	    }
-	    
-	    for(int i=0;i<E;i++){
-	        int u=edges[i][0];
-	        int v=edges[i][1];
-	        int w=edges[i][2];
-	        adj.get(u).add(new Pair(v,w));
-	        adj.get(v).add(new Pair(u,w));
-	    }
-	    
-	    PriorityQueue<Pair>pq=new PriorityQueue<>((x,y)->x.dist-y.dist);
-	    boolean[]vis=new boolean[V];
-	    
-	    pq.add(new Pair(0,0));
+	    DisjointSet ds=new DisjointSet(V);
 	    int sum=0;
 	    
+	     Arrays.sort(edges, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] a, int[] b) {
+                return Integer.compare(a[2], b[2]);
+            }
+        });
+
+        // Print the sorted array
+        // for (int[] row : edges) {
+        //     System.out.println(Arrays.toString(row));
+        // }
 	    
-	    while(pq.size()>0){
-	        Pair remPair=pq.poll();
-	        
-	        int parNode=remPair.node;
-	        int parDist=remPair.dist;
-	        
-	        if(vis[parNode]==true)continue;
-	        
-	        vis[parNode]=true;
-	        sum+=parDist;
-	        
-	        for(Pair itr:adj.get(parNode)){
-	            int adjNode=itr.node;
-	            int adjDist=itr.dist;
-	            
-	            if(vis[adjNode]==false)pq.add(new Pair(adjNode,adjDist));
-	        }
-	        
+	    for(int i=0;i<E;i++){
+	       int u=edges[i][0];
+	       int v=edges[i][1];
+	       int w=edges[i][2];
+	       
+	       if(ds.find(u)!=ds.find(v)){
+	           sum=sum+w;
+	           ds.union(u,v);
+	       }
 	    }
 	    
 	    return sum;
 	    
 	    
-	 
 	    
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
